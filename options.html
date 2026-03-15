@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CacheCleaner Settings</title>
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --bg: #111827;
+      --text: #f3f4f6;
+      --card-bg: #1f2937;
+      --border: #374151;
+      --danger: #ef4444;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin-top: 40px;
+      padding: 30px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h1 img {
+      width: 32px;
+      height: 32px;
+    }
+    p.desc {
+      color: #9ca3af;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    .list-container {
+      margin-bottom: 30px;
+    }
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .list-item button {
+      background: transparent;
+      color: var(--danger);
+      padding: 0;
+      margin: 0;
+      border: none;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .list-item button:hover {
+      color: #f87171;
+      background: transparent;
+    }
+    .notifications {
+      margin-top: 15px;
+      color: #10b981;
+      font-size: 14px;
+      font-weight: 500;
+      min-height: 20px;
+    }
+    .info-box {
+      background: rgba(59, 130, 246, 0.1);
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 4px;
+    }
+    .info-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #d1d5db;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><img src="icons/icon128.png" alt="Broom" id="header-icon"/> CacheCleaner Settings</h1>
+    <p class="desc">Define the exact names of cookies, LocalStorage, or SessionStorage keys that you want to <strong>KEEP</strong> when you click the broom icon (e.g. `auth_token`, `session_id`).</p>
+    
+    <label for="exclusion-input">Add Exception Key</label>
+    <div class="input-group">
+      <input type="text" id="exclusion-input" placeholder="e.g. auth_token..." />
+      <button id="add-btn">Add Key</button>
+    </div>
+
+    <div class="list-container" id="exceptions-list">
+      <!-- List items go here -->
+    </div>
+    
+    <div class="notifications" id="notification"></div>
+
+    <div class="info-box">
+      <p>💡 <strong>Force Clean:</strong> To perform a Force Clean that ignores these exceptions and deletes <em>everything</em> for the current active tab, <strong>right-click the extension icon</strong> and select "Force Clean".</p>
+    </div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

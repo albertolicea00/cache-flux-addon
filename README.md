@@ -1,16 +1,19 @@
-<h1 align="left">🧹 CacheCleaner</h1>
-
-<p align="left">
-  <strong>One-click browser data cleaner for developers.</strong><br/>
-  Sweep away cookies, localStorage, sessionStorage, IndexedDB, and CacheStorage — instantly.
-</p>
-
-<p align="left">
-  <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3" />
-  <img src="https://img.shields.io/badge/chrome-extension-green?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome Extension" />
-  <img src="https://img.shields.io/badge/license-MIT-yellow?style=flat-square" alt="MIT License" />
-  <img src="https://img.shields.io/badge/version-1.0.0-orange?style=flat-square" alt="Version" />
-</p>
+<div align="left">
+  <h1>🧹 CacheCleaner</h1>
+  <p><strong>One-click browser data cleaner for developers.</strong><br/>
+  Sweep away cookies, localStorage, sessionStorage, IndexedDB, and CacheStorage — instantly.</p>
+  <p>
+    <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Chrome_Web_Store-Available-4285F4?style=flat-square&logo=google-chrome&logoColor=white" alt="Chrome Web Store" /></a>
+    <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Firefox_Add--ons-Available-FF7139?style=flat-square&logo=firefox-browser&logoColor=white" alt="Firefox Add-ons" /></a>
+    <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Edge_Add--ons-Available-0078D7?style=flat-square&logo=microsoft-edge&logoColor=white" alt="Edge Add-ons" /></a>
+  </p>
+  <p>
+    <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript" />
+    <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white" alt="CSS3" />
+    <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5" />
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License MIT" />
+  </p>
+</div>
 
 
 ## 🚀 Why CacheCleaner?
@@ -22,13 +25,11 @@ As developers, we constantly deal with stale cached data during development. Man
 
 ## ✨ Features
 
-| Feature                | Description                                                                      |
-| ---------------------- | -------------------------------------------------------------------------------- |
-| 🖱️ **One-Click Clean** | Click the broom icon → clears all site data for the active tab instantly         |
-| 🛡️ **Exception List**  | Protect specific keys (e.g. `auth_token`, `theme`) from being deleted            |
-| 💥 **Force Clean**     | Right-click the icon → "Force Clean" ignores all exceptions and nukes everything |
-| 🟢 **Visual Feedback** | Badge turns green `CLEAN` on standard clean, red `FORCE` on force clean          |
-| 🔒 **Privacy First**   | Works only on the active tab. No background tracking. No data collected          |
+- 🖱️ **One-Click Clean**: Click the broom icon → clears all site data for the active tab instantly.
+- 🛡️ **Exception List**: Protect specific keys (e.g. `auth_token`, `theme`) from being deleted.
+- 💥 **Force Clean**: Right-click the icon → "Force Clean" ignores all exceptions and nukes everything.
+- 🟢 **Visual Feedback**: Badge turns green `CLEAN` on standard clean, red `FORCE` on force clean.
+- 🔒 **Privacy First**: Works only on the active tab. No background tracking. No data collected.
 
 ### What gets cleaned
 
@@ -39,27 +40,37 @@ As developers, we constantly deal with stale cached data during development. Man
 - ✅ `CacheStorage` (Service Worker caches)
 
 
-## 📦 Installation
+## 📥 Installation
 
-### From Source (Developer Mode)
+### 🌐 From Extension Stores (Recommended)
 
-1. **Clone** this repository:
+Installing from the official stores is the easiest way to get **CacheCleaner** and ensure it stays updated automatically. *(Links will be active once published!)*
 
+1. **Google Chrome & Chromium-based browsers (Brave, Vivaldi, Opera)**
+   - 👉 [Download on Chrome Web Store](#)
+   - Click **"Add to Chrome"** and confirm.
+
+2. **Microsoft Edge**
+   - 👉 [Download on Edge Add-ons](#)
+   - Click **"Get"** and confirm.
+
+3. **Mozilla Firefox**
+   - 👉 [Download on Firefox Add-ons](#)
+   - Click **"Add to Firefox"** and confirm.
+
+### 🛠️ Manual Installation (Developer Mode)
+
+If you want to test the latest features or contribute to the project, you can install the extension manually.
+
+1. 📥 Download or clone this repository:
    ```bash
    git clone https://github.com/albertolicea00/CacheCleaner.git
    ```
-
-2. Open **Chrome** (or any Chromium-based browser) and go to:
-
-   ```
-   chrome://extensions/
-   ```
-
-3. Enable **Developer mode** (toggle in the top-right corner).
-
-4. Click **"Load unpacked"** and select the `CacheCleaner` folder.
-
-5. 📌 **Pin the extension** to your toolbar for quick access!
+2. 🌐 Open your Chromium-based browser (Chrome, Edge, Brave).
+3. ⚙️ Go to the extensions page: `chrome://extensions/` (or `edge://extensions/`).
+4. 🔓 Enable **"Developer mode"** in the top right corner.
+5. 📂 Click **"Load unpacked"** and select the folder containing these files.
+6. 📌 Pin the **CacheCleaner** icon to your toolbar for easy access!
 
 
 ## 🧑‍💻 Usage

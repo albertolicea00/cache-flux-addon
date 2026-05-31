@@ -1,22 +1,17 @@
-<p align="center">
-  <img src="icons/icon128.png" alt="CacheCleaner Logo" width="100" />
-</p>
+<h1 align="left">🧹 CacheCleaner</h1>
 
-<h1 align="center">🧹 CacheCleaner</h1>
-
-<p align="center">
+<p align="left">
   <strong>One-click browser data cleaner for developers.</strong><br/>
   Sweep away cookies, localStorage, sessionStorage, IndexedDB, and CacheStorage — instantly.
 </p>
 
-<p align="center">
+<p align="left">
   <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3" />
   <img src="https://img.shields.io/badge/chrome-extension-green?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome Extension" />
   <img src="https://img.shields.io/badge/license-MIT-yellow?style=flat-square" alt="MIT License" />
   <img src="https://img.shields.io/badge/version-1.0.0-orange?style=flat-square" alt="Version" />
 </p>
 
----
 
 ## 🚀 Why CacheCleaner?
 
@@ -24,7 +19,6 @@ As developers, we constantly deal with stale cached data during development. Man
 
 **CacheCleaner** gives you a single-click broom icon in your toolbar that instantly wipes all site data for your active tab — so you can focus on building, not cleaning.
 
----
 
 ## ✨ Features
 
@@ -44,7 +38,6 @@ As developers, we constantly deal with stale cached data during development. Man
 - ✅ `IndexedDB` databases
 - ✅ `CacheStorage` (Service Worker caches)
 
----
 
 ## 📦 Installation
 
@@ -68,7 +61,6 @@ As developers, we constantly deal with stale cached data during development. Man
 
 5. 📌 **Pin the extension** to your toolbar for quick access!
 
----
 
 ## 🧑‍💻 Usage
 
@@ -93,7 +85,6 @@ Simply **left-click** the 🧹 broom icon on the toolbar.
 3. This will delete **everything** regardless of exceptions
 4. Shows a red **FORCE** badge as confirmation
 
----
 
 ## 🏗️ Project Structure
 
@@ -113,7 +104,6 @@ CacheCleaner/
 └── README.md           # You are here!
 ```
 
----
 
 ## 🔐 Permissions Explained
 
@@ -127,25 +117,16 @@ CacheCleaner/
 
 > ⚠️ **No data is ever collected, transmitted, or stored externally.** Everything runs locally in your browser.
 
----
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) guide before submitting a PR.
+Contributions are welcome! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) guide before submitting a pull request or opening an issue.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
 
 ## 📄 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
----
 
 ## 👤 Author
 

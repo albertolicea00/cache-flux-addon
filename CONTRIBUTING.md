@@ -16,10 +16,16 @@ Thank you for your interest in contributing to CacheCleaner! This guide will hel
 
 ## Development Workflow
 
-1. Create a new branch for your feature or fix:
+We use a two-branch workflow:
+- `main`: Stable release version.
+- `beta`: Active development branch.
+
+**All Pull Requests must be directed to the `beta` branch.**
+
+1. Create a new branch from `beta` for your feature or fix:
 
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/your-feature-name beta
    ```
 
 2. Make your changes — the extension uses **Manifest V3** with:

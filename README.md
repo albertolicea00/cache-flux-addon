@@ -46,33 +46,44 @@ As developers, we constantly deal with stale cached data during development. Man
 
 ### 🌐 From Extension Stores (Recommended)
 
-Installing from the official stores is the easiest way to get **CacheCleaner** and ensure it stays updated automatically. *(Links will be active once published!)*
+Installing from the official stores is the easiest way to get **CacheCleaner** and ensure it stays updated automatically.
 
-1. **Google Chrome & Chromium-based browsers (Brave, Vivaldi, Opera)**
-   - 👉 [Download on Chrome Web Store](#)
+> ⚠️ **Coming soon — currently under review**
+<!-- TODO -->
+<!-- 1. **Google Chrome & Chromium-based browsers (Brave, Vivaldi, Opera)**
+   - 👉 [Download on Chrome Web Store](https://chromewebstore.google.com/)
    - Click **"Add to Chrome"** and confirm.
 
 2. **Microsoft Edge**
-   - 👉 [Download on Edge Add-ons](#)
+   - 👉 [Download on Edge Add-ons](https://microsoftedge.microsoft.com/addons)
    - Click **"Get"** and confirm.
 
 3. **Mozilla Firefox**
-   - 👉 [Download on Firefox Add-ons](#)
-   - Click **"Add to Firefox"** and confirm.
+   - 👉 [Download on Firefox Add-ons](https://addons.mozilla.org/)
+   - Click **"Add to Firefox"** and confirm. -->
 
 ### 🛠️ Manual Installation (Developer Mode)
 
 If you want to test the latest features or contribute to the project, you can install the extension manually.
 
-1. 📥 Download or clone this repository:
-   ```bash
-   git clone https://github.com/albertolicea00/CacheCleaner.git
-   ```
-2. 🌐 Open your Chromium-based browser (Chrome, Edge, Brave).
-3. ⚙️ Go to the extensions page: `chrome://extensions/` (or `edge://extensions/`).
-4. 🔓 Enable **"Developer mode"** in the top right corner.
-5. 📂 Click **"Load unpacked"** and select the folder containing these files.
-6. 📌 Pin the **CacheCleaner** icon to your toolbar for easy access!
+#### 1. 📥 Download or clone this repository:
+```bash
+git clone https://github.com/albertolicea00/CacheCleaner.git
+```
+
+#### 2. Load the Extension in Your Browser:
+
+##### For Google Chrome & Chromium-based browsers (Edge, Brave, Opera):
+1. 🌐 Open your browser and go to `chrome://extensions/` (or `edge://extensions/`).
+2. 🔓 Enable **"Developer mode"** in the top right corner.
+3. 📂 Click **"Load unpacked"** and select the extension folder.
+
+##### For Mozilla Firefox:
+1. 🦊 Open Firefox and go to `about:debugging#/runtime/this-firefox`.
+2. 📂 Click **"Load Temporary Add-on..."**.
+3. 📄 Select the `manifest.json` file in the extension folder.
+
+#### 3. 📌 Pin the **CacheCleaner** icon to your toolbar for easy access!
 
 
 ## 🧑‍💻 Usage

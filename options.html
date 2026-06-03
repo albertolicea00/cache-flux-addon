@@ -6,9 +6,9 @@
   <title>CacheCleaner Settings</title>
   <style>
     :root {
-      --primary: #3b82f6;
+      --primary: #D5AC65;
       --bg: #111827;
-      --text: #f3f4f6;
+      --text: #D5AC65;
       --card-bg: #1f2937;
       --border: #374151;
       --danger: #ef4444;
@@ -135,12 +135,100 @@
       font-size: 14px;
       color: #d1d5db;
     }
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 25px;
+      padding: 15px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #d1d5db;
+      user-select: none;
+      margin-bottom: 0;
+    }
+    .checkbox-container input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--card-bg);
+      outline: none;
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .checkbox-container input[type="checkbox"]::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      transform: scale(0);
+      transition: transform 0.1s ease-in-out;
+      background-color: white;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    }
+    .checkbox-container input[type="checkbox"]:checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .checkbox-container input[type="checkbox"]:checked::before {
+      transform: scale(1);
+    }
+    .checkbox-container:hover input[type="checkbox"] {
+      border-color: var(--primary);
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1><img src="icons/icon128.png" alt="Broom" id="header-icon"/> CacheCleaner Settings</h1>
-    <p class="desc">Define the exact names of cookies, LocalStorage, or SessionStorage keys that you want to <strong>KEEP</strong> when you click the broom icon (e.g. `auth_token`, `session_id`).</p>
+    <p class="desc">Configure cleanup preferences and protect specific data keys.</p>
+
+    <label>Data to Clean</label>
+    <div class="settings-grid">
+      <label class="checkbox-container">
+        <input type="checkbox" id="clean-cookies" />
+        <span class="checkbox-label">Cookies</span>
+      </label>
+      <label class="checkbox-container">
+        <input type="checkbox" id="clean-localstorage" />
+        <span class="checkbox-label">LocalStorage</span>
+      </label>
+      <label class="checkbox-container">
+        <input type="checkbox" id="clean-sessionstorage" />
+        <span class="checkbox-label">SessionStorage</span>
+      </label>
+      <label class="checkbox-container">
+        <input type="checkbox" id="clean-cachestorage" />
+        <span class="checkbox-label">CacheStorage</span>
+      </label>
+      <label class="checkbox-container">
+        <input type="checkbox" id="clean-indexeddb" />
+        <span class="checkbox-label">IndexedDB</span>
+      </label>
+    </div>
+
+    <label>Cleanup Behavior</label>
+    <div class="settings-grid" style="grid-template-columns: 1fr;">
+      <label class="checkbox-container">
+        <input type="checkbox" id="reload-page" />
+        <span class="checkbox-label">Reload tab after cleaning</span>
+      </label>
+    </div>
+
+    <label>Keep Specific Keys (Exceptions)</label>
+    <p class="desc" style="margin-top: 5px;">Define the exact names of cookies, LocalStorage, or SessionStorage keys that you want to <strong>KEEP</strong> when you click the broom icon (e.g. `auth_token`, `session_id`).</p>
     
     <label for="exclusion-input">Add Exception Key</label>
     <div class="input-group">

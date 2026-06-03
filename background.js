@@ -16,11 +16,19 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-// Retrieve the list of exceptions (cookie/storage keys to protect from deletion)
-async function getExceptions() {
+// Retrieve user preferences and exceptions from sync storage
+async function getOptions() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(['exceptions'], (result) => {
-      resolve(result.exceptions || []);
+    chrome.storage.sync.get({
+      cleanCookies: true,
+      cleanLocalStorage: true,
+      cleanSessionStorage: true,
+      cleanCacheStorage: true,
+      cleanIndexedDB: true,
+      reloadPage: false,
+      exceptions: []
+    }, (result) => {
+      resolve(result);
     });
   });
 }
@@ -30,110 +38,123 @@ async function getExceptions() {
 // (not in the background Service Worker), giving it direct DOM access
 // to localStorage, sessionStorage, caches, indexedDB, and document.cookie.
 // ----------------------------------------------------------------------------
-function deleteData(exceptions, isForce) {
+function deleteData(exceptions, isForce, options) {
   const cleaned = [];
+  
+  // Use default options if options object is not provided
+  const settings = options || {
+    cleanLocalStorage: true,
+    cleanSessionStorage: true,
+    cleanCacheStorage: true,
+    cleanIndexedDB: true,
+    cleanCookies: true
+  };
 
   // 1. LocalStorage cleanup
-  try {
-    if (isForce) {
-      localStorage.clear();
-      cleaned.push("localStorage (cleared all)");
-    } else {
-      let count = 0;
-      // Loop backwards to avoid index shifting issues when removing items
-      for (let i = localStorage.length - 1; i >= 0; i--) {
-        const key = localStorage.key(i);
-        if (!exceptions.includes(key)) {
-          localStorage.removeItem(key);
-          count++;
+  if (settings.cleanLocalStorage) {
+    try {
+      if (isForce) {
+        localStorage.clear();
+        cleaned.push("localStorage (cleared all)");
+      } else {
+        let count = 0;
+        // Loop backwards to avoid index shifting issues when removing items
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const key = localStorage.key(i);
+          if (!exceptions.includes(key)) {
+            localStorage.removeItem(key);
+            count++;
+          }
         }
+        cleaned.push(`localStorage (${count} items removed)`);
       }
-      if (count > 0) cleaned.push(`localStorage (${count} items removed)`);
+    } catch (e) {
+      console.error("🧹 CacheCleaner: Error cleaning localStorage:", e);
     }
-  } catch (e) {
-    console.error("🧹 CacheCleaner: Error cleaning localStorage:", e);
   }
 
   // 2. SessionStorage cleanup
-  try {
-    if (isForce) {
-      sessionStorage.clear();
-      cleaned.push("sessionStorage (cleared all)");
-    } else {
-      let count = 0;
-      for (let i = sessionStorage.length - 1; i >= 0; i--) {
-        const key = sessionStorage.key(i);
-        if (!exceptions.includes(key)) {
-          sessionStorage.removeItem(key);
-          count++;
+  if (settings.cleanSessionStorage) {
+    try {
+      if (isForce) {
+        sessionStorage.clear();
+        cleaned.push("sessionStorage (cleared all)");
+      } else {
+        let count = 0;
+        for (let i = sessionStorage.length - 1; i >= 0; i--) {
+          const key = sessionStorage.key(i);
+          if (!exceptions.includes(key)) {
+            sessionStorage.removeItem(key);
+            count++;
+          }
         }
+        cleaned.push(`sessionStorage (${count} items removed)`);
       }
-      if (count > 0) cleaned.push(`sessionStorage (${count} items removed)`);
+    } catch (e) {
+      console.error("🧹 CacheCleaner: Error cleaning sessionStorage:", e);
     }
-  } catch (e) {
-    console.error("🧹 CacheCleaner: Error cleaning sessionStorage:", e);
   }
 
   // 3. CacheStorage cleanup (Service Workers / Cache API)
-  try {
-    caches.keys().then((cacheNames) => {
-      let count = 0;
-      cacheNames.forEach(name => {
-        if (isForce || !exceptions.includes(name)) {
-          caches.delete(name);
-          count++;
-        }
-      });
-      if (count > 0) {
-        console.log(`🧹 CacheCleaner: Cleaned CacheStorage (${count} caches removed)`);
-      }
-    });
-  } catch (e) {
-    console.error("🧹 CacheCleaner: Error cleaning CacheStorage:", e);
-  }
-
-  // 4. IndexedDB cleanup
-  try {
-    if (indexedDB.databases) {
-      indexedDB.databases().then(databases => {
+  if (settings.cleanCacheStorage) {
+    try {
+      caches.keys().then((cacheNames) => {
         let count = 0;
-        databases.forEach(db => {
-          if (isForce || !exceptions.includes(db.name)) {
-            indexedDB.deleteDatabase(db.name);
+        cacheNames.forEach(name => {
+          if (isForce || !exceptions.includes(name)) {
+            caches.delete(name);
             count++;
           }
         });
-        if (count > 0) {
-          console.log(`🧹 CacheCleaner: Cleaned IndexedDB (${count} databases removed)`);
-        }
+        console.log(`🧹 CacheCleaner: Cleaned CacheStorage (${count} caches removed)`);
       });
+    } catch (e) {
+      console.error("🧹 CacheCleaner: Error cleaning CacheStorage:", e);
     }
-  } catch (e) {
-    console.error("🧹 CacheCleaner: Error cleaning IndexedDB:", e);
   }
 
-  // 5. JavaScript-accessible cookies cleanup (non-HttpOnly)
-  try {
-    const cookies = document.cookie.split(";");
-    let count = 0;
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i];
-      const eqPos = cookie.indexOf("=");
-      const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
-      if (name && (isForce || !exceptions.includes(name))) {
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-        count++;
+  // 4. IndexedDB cleanup
+  if (settings.cleanIndexedDB) {
+    try {
+      if (indexedDB.databases) {
+        indexedDB.databases().then(databases => {
+          let count = 0;
+          databases.forEach(db => {
+            if (isForce || !exceptions.includes(db.name)) {
+              indexedDB.deleteDatabase(db.name);
+              count++;
+            }
+          });
+          console.log(`🧹 CacheCleaner: Cleaned IndexedDB (${count} databases removed)`);
+        });
       }
+    } catch (e) {
+      console.error("🧹 CacheCleaner: Error cleaning IndexedDB:", e);
     }
-    if (count > 0) cleaned.push(`document.cookie (${count} cookies removed)`);
-  } catch (e) {
-    console.error("🧹 CacheCleaner: Error cleaning document.cookie:", e);
   }
 
-  // Print a unified, clean console summary for page-context storage
-  if (cleaned.length > 0) {
-    console.log(`🧹 CacheCleaner: DOM storage cleared: ${cleaned.join(', ')}`);
+  // 5. JavaScript-accessible cookies cleanup (non-HttpOnly fallback)
+  if (settings.cleanCookies) {
+    try {
+      const cookies = document.cookie.split(";");
+      let count = 0;
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+        if (name && (isForce || !exceptions.includes(name))) {
+          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+          count++;
+        }
+      }
+      cleaned.push(`document.cookie (${count} cookies removed)`);
+    } catch (e) {
+      console.error("🧹 CacheCleaner: Error cleaning document.cookie:", e);
+    }
   }
+
+  // Print a unified, clean console summary for page-context storage (always outputs so the user knows it ran)
+  console.log(`🧹 CacheCleaner: DOM storage cleared: ${cleaned.join(', ') || 'no storage types selected for cleaning'}`);
 
   return true;
 }
@@ -190,19 +211,34 @@ function cookieMatchesHost(cookieDomain, host) {
 // Orchestrates the coordinated cleanup (DOM injection + background cookies API)
 // ----------------------------------------------------------------------------
 async function performClean(tab, isForce) {
-  const exceptions = await getExceptions();
+  const options = await getOptions();
+  const exceptions = options.exceptions;
 
   // Inject and execute DOM cleanup function in the active tab
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
     func: deleteData,
-    args: [exceptions, isForce]
+    args: [exceptions, isForce, options]
   }, () => {
     // Provide temporary visual feedback via the extension badge
     chrome.action.setBadgeText({ text: isForce ? "FORCE" : "CLEAN", tabId: tab.id });
     chrome.action.setBadgeBackgroundColor({ color: isForce ? "#ef4444" : "#10b981", tabId: tab.id });
-    setTimeout(() => chrome.action.setBadgeText({ text: "", tabId: tab.id }), 2000);
+    
+    setTimeout(() => {
+      chrome.action.setBadgeText({ text: "", tabId: tab.id });
+      
+      // If the reload option is checked, reload the active tab now that the cleanup is done
+      if (options.reloadPage) {
+        chrome.tabs.reload(tab.id);
+      }
+    }, 2000);
   });
+
+  // If cookies cleaning is disabled in settings, do not proceed with cookies API deletion
+  if (!options.cleanCookies) {
+    console.log(`🧹 CacheCleaner: Cookies cleaning is disabled by settings.`);
+    return;
+  }
 
   // Helper wrapper around chrome.cookies.getAll to return a promise
   const getCookies = (options) => {

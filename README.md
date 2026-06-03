@@ -30,11 +30,7 @@ As developers, we constantly deal with stale cached data during development. Man
 - 🔄 **Automatic Tab Reload**: Toggle automatic tab refreshing in settings to immediately apply cleanup changes.
 - 🛡️ **Exception List**: Protect specific keys (e.g., `auth_token`, `theme`) from being deleted during standard cleanups.
 - 💥 **Force Clean**: Right-click the extension icon → "Force Clean" ignores all exceptions and clears all selected storage categories.
-- 🟢 **Visual Feedback & Reload Warnings**:
-  - Badge turns green `CLEAN` on standard clean, and red `FORCE` on force clean.
-  - Badge transitions to a gold `🔄` icon right before reloading to warn you that the tab is refreshing.
-- ❓ **Interactive Tooltips**: Hover over the `?` help badges in the Options page to read concise definitions of each storage type.
-- 🍪 **Partitioned Cookies (CHIPS) Support**: Wipes modern partitioned cookies using Chrome's `partitionKey` API.
+- 🟢 **Visual Feedback**: A beautiful page-injected toast notification shows a real-time progress wheel and cycles through cleaning stages.
 - 🔒 **Privacy First**: Works strictly on the active tab's domain and parent domains. No tracking, no external data storage.
 
 ### What gets cleaned
@@ -87,7 +83,7 @@ Simply **left-click** the 🧹 broom icon on the toolbar.
 
 - Clears all site data for the current tab
 - Respects your configured exceptions
-- Shows a green **CLEAN** badge as confirmation
+- Shows a toast notification listing the cleared items after a brief progress animation
 
 ### Configure Exceptions
 
@@ -100,7 +96,7 @@ Simply **left-click** the 🧹 broom icon on the toolbar.
 1. **Right-click** the extension icon
 2. Select **"Force Clean (Ignore Exceptions)"**
 3. This will delete **everything** regardless of exceptions
-4. Shows a red **FORCE** badge as confirmation
+4. Shows a "Force Clean Completed" toast notification listing the cleared items
 
 
 ## 🏗️ Project Structure

@@ -173,7 +173,9 @@ function renderToast(isForce, willReload, storageReport) {
   const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   
   // Theme color variables
-  const bgColor = isDark ? '#1f2937' : '#ffffff';
+  const bgColor = isDark 
+  ? 'rgba(31, 41, 55, .9)'
+  : 'rgba(255, 255, 255, .9)';
   const textColor = isDark ? '#f3f4f6' : '#1f2937';
   const borderColor = isDark ? '#374151' : '#e5e7eb';
   const descColor = isDark ? '#9ca3af' : '#4b5563';

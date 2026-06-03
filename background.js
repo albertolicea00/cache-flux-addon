@@ -197,90 +197,206 @@ function renderToast(isForce, willReload, storageReport) {
   toast.style.fontFamily = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   toast.style.fontSize = '14px';
   toast.style.display = 'flex';
-  toast.style.alignItems = 'center';
+  toast.style.alignItems = 'flex-start';
   toast.style.gap = '14px';
   toast.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
   toast.style.transform = 'translateY(50px) scale(0.95)';
   toast.style.opacity = '0';
 
-  const icon = document.createElement('span');
-  icon.textContent = isForce ? '💥' : '🧹';
-  icon.style.fontSize = '24px';
-  toast.appendChild(icon);
+  // Inject spinner styles if not already present in document
+  let styleTag = document.getElementById('cache-cleaner-toast-style');
+  if (!styleTag) {
+    styleTag = document.createElement('style');
+    styleTag.id = 'cache-cleaner-toast-style';
+    styleTag.textContent = `
+      @keyframes cc-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .cc-spinner-spin {
+        animation: cc-spin 0.8s linear infinite !important;
+      }
+    `;
+    document.head.appendChild(styleTag);
+  }
+
+  // Create loading spinner element
+  const spinner = document.createElement('div');
+  spinner.className = 'cc-spinner-spin';
+  spinner.style.width = '24px';
+  spinner.style.height = '24px';
+  spinner.style.border = `3px solid ${borderColor}`;
+  spinner.style.borderTop = `3px solid ${accentColor}`;
+  spinner.style.borderRadius = '50%';
+  spinner.style.flexShrink = '0';
+  spinner.style.display = 'inline-block';
+  spinner.style.transition = 'all 0.2s ease';
+
+  // Container to hold either spinner or broom emoji without layout shifts
+  const iconContainer = document.createElement('div');
+  iconContainer.style.width = '24px';
+  iconContainer.style.height = '24px';
+  iconContainer.style.display = 'flex';
+  iconContainer.style.alignItems = 'center';
+  iconContainer.style.justifyContent = 'center';
+  iconContainer.style.fontSize = '24px';
+  iconContainer.style.transition = 'all 0.2s ease';
+  iconContainer.style.marginTop = '2px';
+  iconContainer.appendChild(spinner);
+  toast.appendChild(iconContainer);
 
   const textContainer = document.createElement('div');
   textContainer.style.display = 'flex';
   textContainer.style.flexDirection = 'column';
   
   const title = document.createElement('strong');
-  title.textContent = isForce ? 'Force Clean Completed' : 'Cleanup Completed';
+  title.textContent = 'Cleaning site data...';
   title.style.color = accentColor;
   title.style.fontSize = '14px';
   title.style.fontWeight = '600';
+  title.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
   textContainer.appendChild(title);
 
-  // Compile list of storage types successfully wiped
-  const detailsList = [];
-  if (storageReport.localStorage && !storageReport.localStorage.includes("0 items")) {
-    detailsList.push(`LocalStorage (${storageReport.localStorage.includes("cleared all") ? "all cleared" : storageReport.localStorage})`);
-  }
-  if (storageReport.sessionStorage && !storageReport.sessionStorage.includes("0 items")) {
-    detailsList.push(`SessionStorage (${storageReport.sessionStorage.includes("cleared all") ? "all cleared" : storageReport.sessionStorage})`);
-  }
-  if (storageReport.cookies && !storageReport.cookies.includes("0 cookies")) {
-    detailsList.push(`Cookies (${storageReport.cookies})`);
-  }
-  if (storageReport.cacheStorage) {
-    detailsList.push(`CacheStorage`);
-  }
-  if (storageReport.indexedDB) {
-    detailsList.push(`IndexedDB`);
-  }
-
-  const details = document.createElement('span');
+  const details = document.createElement('div');
   details.style.color = descColor;
   details.style.fontSize = '12px';
   details.style.marginTop = '4px';
   details.style.lineHeight = '1.4';
-  
-  if (detailsList.length > 0) {
-    details.textContent = `Cleared: ${detailsList.join(', ')}`;
-  } else {
-    details.textContent = 'No site data was found or cleared.';
-  }
+  details.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+  details.textContent = 'Sweeping LocalStorage & SessionStorage...';
   textContainer.appendChild(details);
-
-  // Show a counting reload warning if auto-refresh is active
-  if (willReload) {
-    const reloadText = document.createElement('span');
-    reloadText.style.color = accentColor;
-    reloadText.style.fontSize = '11px';
-    reloadText.style.marginTop = '6px';
-    reloadText.style.fontWeight = '600';
-    reloadText.style.display = 'flex';
-    reloadText.style.alignItems = 'center';
-    reloadText.style.gap = '4px';
-    reloadText.textContent = '🔄 Reloading page in 2 seconds...';
-    textContainer.appendChild(reloadText);
-  }
 
   toast.appendChild(textContainer);
   document.body.appendChild(toast);
 
-  // Slide-in transition
+  // Transition helper function for smooth text fades and content updates
+  const transitionText = (element, newContent, callback) => {
+    element.style.opacity = '0';
+    element.style.transform = 'translateY(-2px)';
+    setTimeout(() => {
+      if (newContent !== undefined) {
+        element.innerHTML = '';
+        if (typeof newContent === 'string') {
+          element.textContent = newContent;
+        } else if (Array.isArray(newContent)) {
+          if (newContent.length > 0) {
+            const list = document.createElement('div');
+            list.style.display = 'flex';
+            list.style.flexDirection = 'column';
+            list.style.gap = '4px';
+            list.style.marginTop = '4px';
+            newContent.forEach(item => {
+              const row = document.createElement('div');
+              row.style.display = 'flex';
+              row.style.alignItems = 'flex-start';
+              row.style.gap = '6px';
+              
+              const bullet = document.createElement('span');
+              bullet.textContent = '•';
+              bullet.style.color = accentColor;
+              bullet.style.lineHeight = '1';
+              bullet.style.marginTop = '3px';
+              row.appendChild(bullet);
+              
+              const label = document.createElement('span');
+              label.textContent = item;
+              row.appendChild(label);
+              
+              list.appendChild(row);
+            });
+            element.appendChild(list);
+          } else {
+            element.textContent = 'No site data was found or cleared.';
+          }
+        }
+      }
+      if (callback) callback();
+      element.style.opacity = '1';
+      element.style.transform = 'translateY(0)';
+    }, 150);
+  };
+
+  // Slide-in transition for the toast container itself
   setTimeout(() => {
     toast.style.transform = 'translateY(0) scale(1)';
     toast.style.opacity = '1';
   }, 50);
 
-  // Slide-out and remove after 4 seconds (only if reload doesn't wipe context first)
-  if (!willReload) {
+  // Fake progress step 2
+  setTimeout(() => {
+    transitionText(details, 'Clearing databases (IndexedDB)...');
+  }, 500);
+
+  // Fake progress step 3
+  setTimeout(() => {
+    transitionText(details, 'Wiping cookies & assets cache...');
+  }, 1000);
+
+  // Success Phase (Transitions to broom emoji and reveals final results)
+  setTimeout(() => {
+    // 1. Swap icon from spinner to broom emoji
+    iconContainer.style.opacity = '0';
+    iconContainer.style.transform = 'scale(0.8)';
     setTimeout(() => {
-      toast.style.transform = 'translateY(20px) scale(0.95)';
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 300);
-    }, 4000);
-  }
+      iconContainer.innerHTML = '🧹';
+      iconContainer.style.opacity = '1';
+      iconContainer.style.transform = 'scale(1)';
+    }, 150);
+
+    // 2. Update title to completion state
+    const finalTitle = isForce ? 'Force Clean Completed' : 'Cleanup Completed';
+    transitionText(title, finalTitle);
+
+    // 3. Compile report of what was actually deleted
+    const detailsList = [];
+    if (storageReport.localStorage && !storageReport.localStorage.includes("0 items")) {
+      detailsList.push(`LocalStorage: ${storageReport.localStorage.includes("all") ? "all cleared" : storageReport.localStorage}`);
+    }
+    if (storageReport.sessionStorage && !storageReport.sessionStorage.includes("0 items")) {
+      detailsList.push(`SessionStorage: ${storageReport.sessionStorage.includes("all") ? "all cleared" : storageReport.sessionStorage}`);
+    }
+    if (storageReport.cookies && !storageReport.cookies.includes("0 cookies")) {
+      detailsList.push(`Cookies: ${storageReport.cookies}`);
+    }
+    if (storageReport.cacheStorage) {
+      detailsList.push('CacheStorage cleared');
+    }
+    if (storageReport.indexedDB) {
+      detailsList.push('IndexedDB database cleared');
+    }
+
+    transitionText(details, detailsList);
+
+    // 4. Handle page reload display or auto-dismiss
+    if (willReload) {
+      setTimeout(() => {
+        const reloadText = document.createElement('span');
+        reloadText.style.color = accentColor;
+        reloadText.style.fontSize = '11px';
+        reloadText.style.marginTop = '6px';
+        reloadText.style.fontWeight = '600';
+        reloadText.style.display = 'flex';
+        reloadText.style.alignItems = 'center';
+        reloadText.style.gap = '4px';
+        reloadText.style.opacity = '0';
+        reloadText.style.transform = 'translateY(2px)';
+        reloadText.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        reloadText.textContent = 'Reloading page in 2 seconds...';
+        textContainer.appendChild(reloadText);
+        
+        setTimeout(() => {
+          reloadText.style.opacity = '1';
+          reloadText.style.transform = 'translateY(0)';
+        }, 50);
+      }, 300);
+    } else {
+      setTimeout(() => {
+        toast.style.transform = 'translateY(20px) scale(0.95)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+  }, 1500);
 }
 
 // Listen for context menu clicks ("Force Clean")
@@ -404,12 +520,82 @@ function deleteCookiesAndGetCount(tab, baseDomain, isForce, exceptions) {
 }
 
 // ----------------------------------------------------------------------------
+// Animates the extension action icon in the toolbar (sweeping motion)
+// for the duration of the cleaning process (1.5 seconds) using OffscreenCanvas.
+// ----------------------------------------------------------------------------
+async function animateExtensionIcon(tabId) {
+  try {
+    const response = await fetch(chrome.runtime.getURL('icons/icon32.png'));
+    const blob = await response.blob();
+    const imgBitmap = await createImageBitmap(blob);
+
+    const canvas = new OffscreenCanvas(32, 32);
+    const ctx = canvas.getContext('2d');
+
+    const totalSteps = 15; // 15 steps * 100ms = 1.5 seconds
+    let step = 0;
+
+    const intervalId = setInterval(() => {
+      ctx.clearRect(0, 0, 32, 32);
+      ctx.save();
+      
+      // Sweep motion: translate to center, rotate, draw, and restore.
+      ctx.translate(16, 16);
+      
+      // Calculate sweeping angle using a sine wave oscillation
+      // The wave repeats ~1.9 times over 15 steps.
+      const angle = 0.35 * Math.sin(step * 0.8);
+      ctx.rotate(angle);
+      
+      ctx.drawImage(imgBitmap, -16, -16, 32, 32);
+      ctx.restore();
+
+      const imageData = ctx.getImageData(0, 0, 32, 32);
+      
+      chrome.action.setIcon({
+        tabId: tabId,
+        imageData: { "32": imageData }
+      }, () => {
+        // Suppress errors if the tab is closed/reloaded during the animation
+        if (chrome.runtime.lastError) {
+          // Silent catch to prevent console noise
+        }
+      });
+
+      step++;
+      if (step >= totalSteps) {
+        clearInterval(intervalId);
+        // Reset to default icons
+        chrome.action.setIcon({
+          tabId: tabId,
+          path: {
+            "16": "icons/icon16.png",
+            "32": "icons/icon32.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+          }
+        }, () => {
+          if (chrome.runtime.lastError) {
+            // Silent catch
+          }
+        });
+      }
+    }, 100);
+  } catch (error) {
+    console.warn(`[CacheCleaner] Failed to run toolbar sweeping animation: ${error.message}`);
+  }
+}
+
+// ----------------------------------------------------------------------------
 // Orchestrates the coordinated cleanup (DOM injection + background cookies API)
 // ----------------------------------------------------------------------------
 async function performClean(tab, isForce) {
   const options = await getOptions();
   const exceptions = options.exceptions;
   const hostname = new URL(tab.url).hostname;
+
+  // Start the sweeping animation of the action icon in the browser toolbar
+  animateExtensionIcon(tab.id);
 
   // Inject and execute DOM storage cleanup first
   chrome.scripting.executeScript({
@@ -477,11 +663,12 @@ async function performClean(tab, isForce) {
         args: [isForce, options.reloadPage, storageReport]
       });
 
-      // If reload is enabled, trigger reload after 2 seconds
+      // If reload is enabled, trigger reload after 3.5 seconds
+      // (Coordinated: 1.5 seconds fake progress + 2 seconds success visibility)
       if (options.reloadPage) {
         setTimeout(() => {
           chrome.tabs.reload(tab.id);
-        }, 2000);
+        }, 3500);
       }
     };
 

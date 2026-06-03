@@ -188,6 +188,58 @@
     .checkbox-container:hover input[type="checkbox"] {
       border-color: var(--primary);
     }
+    .section-desc {
+      color: #9ca3af;
+      font-size: 13px;
+      margin-top: -4px;
+      margin-bottom: 15px;
+    }
+    .tooltip-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #9ca3af;
+      background: #374151;
+      border-radius: 50%;
+      cursor: help;
+      position: relative;
+      user-select: none;
+      transition: background-color 0.2s, color 0.2s;
+      margin-left: 4px;
+    }
+    .tooltip-trigger:hover {
+      background: var(--primary);
+      color: #111827;
+    }
+    .tooltip-trigger::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 135%;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 400;
+      width: 180px;
+      text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 10;
+    }
+    .tooltip-trigger:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
   </style>
 </head>
 <body>
@@ -196,34 +248,42 @@
     <p class="desc">Configure cleanup preferences and protect specific data keys.</p>
 
     <label>Data to Clean</label>
+    <p class="section-desc">Select which categories of website data you want the cleaner to remove from the current page scope.</p>
     <div class="settings-grid">
       <label class="checkbox-container">
         <input type="checkbox" id="clean-cookies" />
         <span class="checkbox-label">Cookies</span>
+        <span class="tooltip-trigger" data-tooltip="HTTP cookies used for sessions and site preferences.">?</span>
       </label>
       <label class="checkbox-container">
         <input type="checkbox" id="clean-localstorage" />
         <span class="checkbox-label">LocalStorage</span>
+        <span class="tooltip-trigger" data-tooltip="Persistent key-value data stored by the website in the browser.">?</span>
       </label>
       <label class="checkbox-container">
         <input type="checkbox" id="clean-sessionstorage" />
         <span class="checkbox-label">SessionStorage</span>
+        <span class="tooltip-trigger" data-tooltip="Temporary key-value data cleared automatically when the tab closes.">?</span>
       </label>
       <label class="checkbox-container">
         <input type="checkbox" id="clean-cachestorage" />
         <span class="checkbox-label">CacheStorage</span>
+        <span class="tooltip-trigger" data-tooltip="Assets cached by Service Workers for offline loading and performance.">?</span>
       </label>
       <label class="checkbox-container">
         <input type="checkbox" id="clean-indexeddb" />
         <span class="checkbox-label">IndexedDB</span>
+        <span class="tooltip-trigger" data-tooltip="Structured client-side database for complex data structures.">?</span>
       </label>
     </div>
 
     <label>Cleanup Behavior</label>
+    <p class="section-desc">Choose actions to perform automatically after the cleaning process completes.</p>
     <div class="settings-grid" style="grid-template-columns: 1fr;">
       <label class="checkbox-container">
         <input type="checkbox" id="reload-page" />
         <span class="checkbox-label">Reload tab after cleaning</span>
+        <span class="tooltip-trigger" data-tooltip="Automatically refreshes the active tab to apply all cleanup changes.">?</span>
       </label>
     </div>
 

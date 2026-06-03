@@ -37,9 +37,10 @@ async function getOptions() {
 // IMPORTANT NOTE: This function executes INSIDE the target tab's page context
 // (not in the background Service Worker), giving it direct DOM access
 // to localStorage, sessionStorage, caches, indexedDB, and document.cookie.
+// It returns a report object that is passed back to the background worker.
 // ----------------------------------------------------------------------------
 function deleteData(exceptions, isForce, options) {
-  const cleaned = [];
+  const report = {};
   
   // Use default options if options object is not provided
   const settings = options || {
@@ -55,7 +56,7 @@ function deleteData(exceptions, isForce, options) {
     try {
       if (isForce) {
         localStorage.clear();
-        cleaned.push("localStorage (cleared all)");
+        report.localStorage = "cleared all";
       } else {
         let count = 0;
         // Loop backwards to avoid index shifting issues when removing items
@@ -66,10 +67,10 @@ function deleteData(exceptions, isForce, options) {
             count++;
           }
         }
-        cleaned.push(`localStorage (${count} items removed)`);
+        report.localStorage = `${count} items removed`;
       }
     } catch (e) {
-      console.error("🧹 CacheCleaner: Error cleaning localStorage:", e);
+      report.localStorage = `error: ${e.message}`;
     }
   }
 
@@ -78,7 +79,7 @@ function deleteData(exceptions, isForce, options) {
     try {
       if (isForce) {
         sessionStorage.clear();
-        cleaned.push("sessionStorage (cleared all)");
+        report.sessionStorage = "cleared all";
       } else {
         let count = 0;
         for (let i = sessionStorage.length - 1; i >= 0; i--) {
@@ -88,10 +89,10 @@ function deleteData(exceptions, isForce, options) {
             count++;
           }
         }
-        cleaned.push(`sessionStorage (${count} items removed)`);
+        report.sessionStorage = `${count} items removed`;
       }
     } catch (e) {
-      console.error("🧹 CacheCleaner: Error cleaning sessionStorage:", e);
+      report.sessionStorage = `error: ${e.message}`;
     }
   }
 
@@ -106,10 +107,10 @@ function deleteData(exceptions, isForce, options) {
             count++;
           }
         });
-        console.log(`🧹 CacheCleaner: Cleaned CacheStorage (${count} caches removed)`);
       });
+      report.cacheStorage = "triggered deletion";
     } catch (e) {
-      console.error("🧹 CacheCleaner: Error cleaning CacheStorage:", e);
+      report.cacheStorage = `error: ${e.message}`;
     }
   }
 
@@ -118,18 +119,16 @@ function deleteData(exceptions, isForce, options) {
     try {
       if (indexedDB.databases) {
         indexedDB.databases().then(databases => {
-          let count = 0;
           databases.forEach(db => {
             if (isForce || !exceptions.includes(db.name)) {
               indexedDB.deleteDatabase(db.name);
-              count++;
             }
           });
-          console.log(`🧹 CacheCleaner: Cleaned IndexedDB (${count} databases removed)`);
         });
       }
+      report.indexedDB = "triggered deletion";
     } catch (e) {
-      console.error("🧹 CacheCleaner: Error cleaning IndexedDB:", e);
+      report.indexedDB = `error: ${e.message}`;
     }
   }
 
@@ -147,16 +146,17 @@ function deleteData(exceptions, isForce, options) {
           count++;
         }
       }
-      cleaned.push(`document.cookie (${count} cookies removed)`);
+      report.documentCookies = `${count} cookies removed`;
     } catch (e) {
-      console.error("🧹 CacheCleaner: Error cleaning document.cookie:", e);
+      report.documentCookies = `error: ${e.message}`;
     }
   }
 
-  // Print a unified, clean console summary for page-context storage (always outputs so the user knows it ran)
-  console.log(`🧹 CacheCleaner: DOM storage cleared: ${cleaned.join(', ') || 'no storage types selected for cleaning'}`);
+  // Print a summary log on the page console for immediate inspection if the tab is not reloaded
+  const details = Object.entries(report).map(([key, val]) => `${key}: ${val}`).join(', ');
+  console.log(`[CacheCleaner] DOM storage cleared: ${details || 'no storage types selected'}`);
 
-  return true;
+  return report;
 }
 
 // Listen for context menu clicks ("Force Clean")
@@ -213,13 +213,24 @@ function cookieMatchesHost(cookieDomain, host) {
 async function performClean(tab, isForce) {
   const options = await getOptions();
   const exceptions = options.exceptions;
+  const hostname = new URL(tab.url).hostname;
 
   // Inject and execute DOM cleanup function in the active tab
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
     func: deleteData,
     args: [exceptions, isForce, options]
-  }, () => {
+  }, (results) => {
+    // Log the page-context DOM storage report in the persistent Service Worker console
+    if (results && results[0] && results[0].result) {
+      const report = results[0].result;
+      Object.entries(report).forEach(([key, val]) => {
+        console.log(`🧹 CacheCleaner: Processed ${key} (${val})`);
+      });
+    } else {
+      console.log(`🧹 CacheCleaner: DOM storage cleared for ${hostname} (no report received)`);
+    }
+
     // Provide temporary visual feedback via the extension badge
     chrome.action.setBadgeText({ text: isForce ? "FORCE" : "CLEAN", tabId: tab.id });
     chrome.action.setBadgeBackgroundColor({ color: isForce ? "#ef4444" : "#10b981", tabId: tab.id });
@@ -255,7 +266,6 @@ async function performClean(tab, isForce) {
   };
 
   try {
-    const hostname = new URL(tab.url).hostname;
     const baseDomain = getBaseDomain(hostname);
 
     // Perform a double query to fetch:

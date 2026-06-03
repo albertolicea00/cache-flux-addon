@@ -25,11 +25,17 @@ As developers, we constantly deal with stale cached data during development. Man
 
 ## ✨ Features
 
-- 🖱️ **One-Click Clean**: Click the broom icon → clears all site data for the active tab instantly.
-- 🛡️ **Exception List**: Protect specific keys (e.g. `auth_token`, `theme`) from being deleted.
-- 💥 **Force Clean**: Right-click the icon → "Force Clean" ignores all exceptions and nukes everything.
-- 🟢 **Visual Feedback**: Badge turns green `CLEAN` on standard clean, red `FORCE` on force clean.
-- 🔒 **Privacy First**: Works only on the active tab. No background tracking. No data collected.
+- 🖱️ **One-Click Clean**: Click the broom icon → clears all selected site data for the active tab instantly.
+- ⚙️ **Granular Cleanup Settings**: Choose exactly what data categories to wipe (Cookies, LocalStorage, SessionStorage, CacheStorage, IndexedDB) in the Options page.
+- 🔄 **Automatic Tab Reload**: Toggle automatic tab refreshing in settings to immediately apply cleanup changes.
+- 🛡️ **Exception List**: Protect specific keys (e.g., `auth_token`, `theme`) from being deleted during standard cleanups.
+- 💥 **Force Clean**: Right-click the extension icon → "Force Clean" ignores all exceptions and clears all selected storage categories.
+- 🟢 **Visual Feedback & Reload Warnings**:
+  - Badge turns green `CLEAN` on standard clean, and red `FORCE` on force clean.
+  - Badge transitions to a gold `🔄` icon right before reloading to warn you that the tab is refreshing.
+- ❓ **Interactive Tooltips**: Hover over the `?` help badges in the Options page to read concise definitions of each storage type.
+- 🍪 **Partitioned Cookies (CHIPS) Support**: Wipes modern partitioned cookies using Chrome's `partitionKey` API.
+- 🔒 **Privacy First**: Works strictly on the active tab's domain and parent domains. No tracking, no external data storage.
 
 ### What gets cleaned
 
@@ -118,13 +124,14 @@ CacheCleaner/
 
 ## 🔐 Permissions Explained
 
-| Permission   | Why it's needed                                        |
-| ------------ | ------------------------------------------------------ |
-| `activeTab`  | Access the currently active tab to run cleanup scripts |
-| `scripting`  | Inject cleanup code into the page context              |
-| `cookies`    | Delete HttpOnly cookies that JavaScript can't access   |
-| `storage`    | Persist your exception list across sessions            |
-| `<all_urls>` | Required by Chrome Cookies API to match any site URL   |
+| Permission     | Why it's needed                                             |
+| -------------- | ----------------------------------------------------------- |
+| `activeTab`    | Access the currently active tab to run cleanup scripts      |
+| `scripting`    | Inject cleanup code into the page context                   |
+| `cookies`      | Delete HttpOnly cookies that JavaScript can't access        |
+| `storage`      | Persist your exceptions list and cleanup configurations     |
+| `contextMenus` | Add the "Force Clean" context menu item to the icon         |
+| `<all_urls>`   | Required by Chrome Cookies API to match active tab site URL |
 
 > ⚠️ **No data is ever collected, transmitted, or stored externally.** Everything runs locally in your browser.
 

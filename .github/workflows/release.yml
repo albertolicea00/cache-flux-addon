@@ -1,0 +1,68 @@
+name: Build, Package, and Publish Extension
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Zip Utility
+        run: sudo apt-get update && sudo apt-get install -y zip
+
+      - name: Build Chrome MV3 Package
+        run: |
+          make chrome
+          zip -r cache-flux-chrome.zip manifest.json background.js options.html options.js icons README.md LICENSE
+
+      - name: Build Firefox MV2 Package
+        run: |
+          make firefox
+          zip -r cache-flux-firefox.zip manifest.json background.js options.html options.js icons README.md LICENSE
+
+      - name: Upload Chrome MV3 Artifact (Workflow Run)
+        uses: actions/upload-artifact@v4
+        with:
+          name: cache-flux-chrome
+          path: cache-flux-chrome.zip
+
+      - name: Upload Firefox MV2 Artifact (Workflow Run)
+        uses: actions/upload-artifact@v4
+        with:
+          name: cache-flux-firefox
+          path: cache-flux-firefox.zip
+
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Packaged Zips
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      # ----------------------------------------------------------------------
+      # GitHub Release Creation
+      # ----------------------------------------------------------------------
+      - name: Create GitHub Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            cache-flux-chrome.zip
+            cache-flux-firefox.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

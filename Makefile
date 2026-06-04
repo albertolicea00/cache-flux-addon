@@ -1,6 +1,6 @@
 VERSION := $(shell grep '"version"' manifest.v3.json | head -n 1 | awk -F'"' '{print $$4}')
 DIST_DIR := dist/$(VERSION)
-FILES := manifest.json background.js options.html options.js icons README.md LICENSE
+FILES := manifest.json background.js options.html options.js icons README.md LICENSE EULA.md PRIVACY_POLICY.md
 
 .PHONY: chrome firefox manifest-2 mv2 v2 manifest-3 mv3 v3 build clean publish
 

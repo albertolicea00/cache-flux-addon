@@ -33,3 +33,5 @@ manifest.json
 .env
 .env.local
 .env.*.local
+
+*.mp4

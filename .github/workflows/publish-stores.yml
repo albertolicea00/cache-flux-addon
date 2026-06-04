@@ -1,0 +1,74 @@
+name: Publish to Add-on Stores
+
+on:
+  workflow_dispatch
+  # release:
+  #   types: [published]
+
+jobs:
+  publish-stores:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Release Assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download ${{ github.event.release.tag_name }} -p "*.zip"
+
+      # ----------------------------------------------------------------------
+      # Chrome Web Store Publication
+      # chromewebstore.google.com
+      # ----------------------------------------------------------------------
+      - name: Upload & Publish Chrome MV3 to Store
+        uses: fregante/chrome-extension-upload-action@v2
+        with:
+          file-name: cache-flux-chrome.zip
+          extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          publish: true
+
+      # ----------------------------------------------------------------------
+      # Microsoft Edge Add-ons Publication
+      # microsoftedge.microsoft.com
+      # ----------------------------------------------------------------------
+      - name: Upload & Publish to Microsoft Edge Add-ons
+        uses: wdzeng/edge-addon-upload@v2
+        with:
+          product-id: ${{ secrets.EDGE_PRODUCT_ID }}
+          client-id: ${{ secrets.EDGE_CLIENT_ID }}
+          client-secret: ${{ secrets.EDGE_CLIENT_SECRET }}
+          access-token-url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
+          file-path: cache-flux-chrome.zip
+          publish: true
+
+      # ----------------------------------------------------------------------
+      # Opera Add-ons Publication
+      # addons.opera.com
+      # ----------------------------------------------------------------------
+      - name: Upload & Publish to Opera Add-ons
+        # Opera doesn't have an official API, but community tools like publish-browser-extension
+        # attempt to automate it using session tokens.
+        run: npx publish-browser-extension --opera-zip cache-flux-chrome.zip --opera-id ${{ secrets.OPERA_EXTENSION_ID }} --opera-token ${{ secrets.OPERA_TOKEN }}
+        continue-on-error: true # Opera uploads often fail due to session token expiry or scraper blocks
+
+      # ----------------------------------------------------------------------
+      # Firefox AMO Publication & Signing
+      # addons.mozilla.org
+      # ----------------------------------------------------------------------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Sign & Submit Firefox MV2 Add-on
+        run: |
+          # The official web-ext tool requires a source directory, it doesn't accept a .zip directly.
+          # We extract the downloaded artifact zip into a temporary folder to sign it.
+          mkdir -p firefox-build
+          unzip -o cache-flux-firefox.zip -d firefox-build
+          npx web-ext sign --source-dir firefox-build --api-key "${{ secrets.FIREFOX_API_KEY }}" --api-secret "${{ secrets.FIREFOX_API_SECRET }}" --channel listed

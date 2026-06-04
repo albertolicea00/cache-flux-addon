@@ -25,7 +25,7 @@ jobs:
       - name: Upload & Publish Chrome MV3 to Store
         uses: fregante/chrome-extension-upload-action@v2
         with:
-          file-name: cache-flux-chrome.zip
+          file-name: cache-flux-manifest-v3.zip
           extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
           client-id: ${{ secrets.CHROME_CLIENT_ID }}
           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
@@ -43,7 +43,7 @@ jobs:
           client-id: ${{ secrets.EDGE_CLIENT_ID }}
           client-secret: ${{ secrets.EDGE_CLIENT_SECRET }}
           access-token-url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
-          file-path: cache-flux-chrome.zip
+          file-path: cache-flux-manifest-v3.zip
           publish: true
 
       # ----------------------------------------------------------------------
@@ -53,7 +53,7 @@ jobs:
       - name: Upload & Publish to Opera Add-ons
         # Opera doesn't have an official API, but community tools like publish-browser-extension
         # attempt to automate it using session tokens.
-        run: npx publish-browser-extension --opera-zip cache-flux-chrome.zip --opera-id ${{ secrets.OPERA_EXTENSION_ID }} --opera-token ${{ secrets.OPERA_TOKEN }}
+        run: npx publish-browser-extension --opera-zip cache-flux-manifest-v3.zip --opera-id ${{ secrets.OPERA_EXTENSION_ID }} --opera-token ${{ secrets.OPERA_TOKEN }}
         continue-on-error: true # Opera uploads often fail due to session token expiry or scraper blocks
 
       # ----------------------------------------------------------------------
@@ -70,5 +70,5 @@ jobs:
           # The official web-ext tool requires a source directory, it doesn't accept a .zip directly.
           # We extract the downloaded artifact zip into a temporary folder to sign it.
           mkdir -p firefox-build
-          unzip -o cache-flux-firefox.zip -d firefox-build
+          unzip -o cache-flux-manifest-v2.zip -d firefox-build
           npx web-ext sign --source-dir firefox-build --api-key "${{ secrets.FIREFOX_API_KEY }}" --api-secret "${{ secrets.FIREFOX_API_SECRET }}" --channel listed

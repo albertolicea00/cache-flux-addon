@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CacheFlux",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "CacheFlux: One-click browser data cleaner for developers. Sweep away cookies, localStorage, sessionStorage, and IndexedDB instantly without breaking your flow.",
   "icons": {
     "16": "icons/icon16.png",

@@ -101,6 +101,16 @@ This copies the correct manifest template to the ignored `manifest.json` file.
 
 #### 3. 📌 Pin the **CacheFlux** icon to your toolbar for easy access!
 
+### 📦 Building Packages Locally
+
+If you need to generate the production `.zip` files locally for manual distribution or testing, you can run:
+
+```bash
+make build
+```
+
+This reads the current version from `manifest.v3.json` and creates a `dist/[VERSION]/` directory containing the `cache-flux-manifest-v3.zip` and `cache-flux-manifest-v2.zip` packages. You can clean this up at any time with `make clean`.
+
 ## 🧑‍💻 Usage
 
 ### Standard Clean
@@ -155,33 +165,30 @@ CacheFlux/
 
 > ⚠️ **No data is ever collected, transmitted, or stored externally.** Everything runs locally in your browser.
 
-<!--
-## 🧪 Local CI/CD Testing (GitHub Actions)
 
-To test the GitHub Actions build and packaging steps locally without pushing to GitHub:
+## 🚀 Releasing to Stores (GitHub Actions)
 
-1. **Install `act`** (runs GitHub Actions locally using Docker):
-   - **macOS (Homebrew)**:
-     ```bash
-     brew install act
-     ```
-   - **Windows / Linux**: Refer to [nektos/act](https://github.com/nektos/act) installation instructions.
+This project uses fully automated GitHub Actions to package and publish the extension to Chrome, Edge, Firefox, and Opera.
 
-2. **Run the local packaging job**:
-   Ensure Docker Desktop is running, then execute:
+To trigger a new release, you **must** create and push a version tag. The CI/CD pipeline is configured to **only** build and generate the `.zip` packages when a tag is pushed. It will not generate zips on regular pushes to `main`.
 
-   ```bash
-   act -j build
-   ```
+To automatically read the version from `manifest.v3.json`, create a tag, and push a new version:
 
-   This spins up a local container, runs the `Makefile` builds, and packages the zip files.
+1. **Bump the `"version"`** field in both `manifest.v3.json` and `manifest.v2.json`.
+2. Commit your changes.
+3. Run the publish command:
 
-3. **Dry-run the full deploy flow**:
-   To check all pipeline job dependencies without calling the store upload APIs:
-   ```bash
-   act --dryrun
-   ```
--->
+```bash
+make publish
+```
+
+This command automatically runs `git tag v[VERSION]` and `git push origin v[VERSION]` for you.
+
+Once pushed, GitHub Actions will automatically:
+
+1. Build the `.zip` files for Chrome/Edge/Opera (Manifest V3) and Firefox (Manifest V2).
+2. Create a GitHub Release with the `.zip` files attached.
+3. Upload and publish the extension to all supported browser stores.
 
 ## 🤝 Contributing
 

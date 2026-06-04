@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for CacheCleaner
+about: Suggest an idea for CacheFlux
 title: "[FEATURE] "
 labels: enhancement
 assignees: ''

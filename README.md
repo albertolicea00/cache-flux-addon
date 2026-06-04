@@ -1,5 +1,5 @@
 <div align="left">
-  <h1>🧹 CacheCleaner</h1>
+  <h1>🧹 CacheFlux</h1>
   <p><strong>One-click browser data cleaner for developers.</strong><br/>
   Sweep away cookies, localStorage, sessionStorage, IndexedDB, and CacheStorage — instantly.</p>
   <p>
@@ -15,13 +15,11 @@
   </p>
 </div>
 
-
-## 🚀 Why CacheCleaner?
+## 🚀 Why CacheFlux?
 
 As developers, we constantly deal with stale cached data during development. Manually going to DevTools → Application → Clear Storage every single time is tedious and breaks your flow.
 
-**CacheCleaner** gives you a single-click broom icon in your toolbar that instantly wipes all site data for your active tab — so you can focus on building, not cleaning.
-
+**CacheFlux** gives you a single-click broom icon in your toolbar that instantly wipes all site data for your active tab — so you can focus on building, not cleaning.
 
 ## ✨ Features
 
@@ -41,14 +39,14 @@ As developers, we constantly deal with stale cached data during development. Man
 - ✅ `IndexedDB` databases
 - ✅ `CacheStorage` (Service Worker caches)
 
-
 ## 📥 Installation
 
 ### 🌐 From Extension Stores (Recommended)
 
-Installing from the official stores is the easiest way to get **CacheCleaner** and ensure it stays updated automatically.
+Installing from the official stores is the easiest way to get **CacheFlux** and ensure it stays updated automatically.
 
 > ⚠️ **Coming soon — currently under review**
+
 <!-- TODO -->
 <!-- 1. **Google Chrome & Chromium-based browsers (Brave, Vivaldi, Opera)**
    - 👉 [Download on Chrome Web Store](https://chromewebstore.google.com/)
@@ -67,8 +65,9 @@ Installing from the official stores is the easiest way to get **CacheCleaner** a
 If you want to test the latest features or contribute to the project, you can install the extension manually.
 
 #### 1. 📥 Download or clone this repository:
+
 ```bash
-git clone https://github.com/albertolicea00/CacheCleaner.git
+git clone https://github.com/albertolicea00/CacheFlux.git
 ```
 
 #### 2. 🔀 Set the Target Manifest (Chrome/MV3 or Firefox/MV2):
@@ -89,17 +88,18 @@ This copies the correct manifest template to the ignored `manifest.json` file.
 #### 3. Load the Extension in Your Browser:
 
 ##### For Google Chrome & Chromium-based browsers (Edge, Brave, Opera):
+
 1. 🌐 Open your browser and go to `chrome://extensions/` (or `edge://extensions/`).
 2. 🔓 Enable **"Developer mode"** in the top right corner.
 3. 📂 Click **"Load unpacked"** and select the extension folder.
 
 ##### For Mozilla Firefox:
+
 1. 🦊 Open Firefox and go to `about:debugging#/runtime/this-firefox`.
 2. 📂 Click **"Load Temporary Add-on..."**.
 3. 📄 Select the `manifest.json` file in the extension folder.
 
-#### 3. 📌 Pin the **CacheCleaner** icon to your toolbar for easy access!
-
+#### 3. 📌 Pin the **CacheFlux** icon to your toolbar for easy access!
 
 ## 🧑‍💻 Usage
 
@@ -124,11 +124,10 @@ Simply **left-click** the 🧹 broom icon on the toolbar.
 3. This will delete **everything** regardless of exceptions
 4. Shows a "Force Clean Completed" toast notification listing the cleared items
 
-
 ## 🏗️ Project Structure
 
 ```
-CacheCleaner/
+CacheFlux/
 ├── manifest.json       # Extension config (Manifest V3)
 ├── background.js       # Service Worker — handles click, context menu & cleanup logic
 ├── options.html        # Settings UI — manage exception keys
@@ -143,7 +142,6 @@ CacheCleaner/
 └── README.md           # You are here!
 ```
 
-
 ## 🔐 Permissions Explained
 
 | Permission     | Why it's needed                                             |
@@ -157,16 +155,41 @@ CacheCleaner/
 
 > ⚠️ **No data is ever collected, transmitted, or stored externally.** Everything runs locally in your browser.
 
+<!--
+## 🧪 Local CI/CD Testing (GitHub Actions)
+
+To test the GitHub Actions build and packaging steps locally without pushing to GitHub:
+
+1. **Install `act`** (runs GitHub Actions locally using Docker):
+   - **macOS (Homebrew)**:
+     ```bash
+     brew install act
+     ```
+   - **Windows / Linux**: Refer to [nektos/act](https://github.com/nektos/act) installation instructions.
+
+2. **Run the local packaging job**:
+   Ensure Docker Desktop is running, then execute:
+
+   ```bash
+   act -j build
+   ```
+
+   This spins up a local container, runs the `Makefile` builds, and packages the zip files.
+
+3. **Dry-run the full deploy flow**:
+   To check all pipeline job dependencies without calling the store upload APIs:
+   ```bash
+   act --dryrun
+   ```
+-->
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) guide before submitting a pull request or opening an issue.
 
-
 ## 📄 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
 
 ## 👤 Author
 

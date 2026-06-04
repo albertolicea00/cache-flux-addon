@@ -1,6 +1,6 @@
-# Agent Instructions for CacheCleaner
+# Agent Instructions for CacheFlux
 
-This repository contains **CacheCleaner**, a browser extension built with Manifest V3 designed to clear site data (cookies, localStorage, etc.) with a single click. When assisting with this project, please adhere to the following rules and context.
+This repository contains **CacheFlux**, a browser extension built with Manifest V3 designed to clear site data (cookies, localStorage, etc.) with a single click. When assisting with this project, please adhere to the following rules and context.
 
 ## Tech Stack
 - **Core:** Vanilla JavaScript (ES6+)
@@ -29,7 +29,7 @@ This repository contains **CacheCleaner**, a browser extension built with Manife
    - **Privacy First:** Never collect, track, or store user data externally. All operations must run locally in the browser context.
 
 4. **Debugging:**
-   - When adding `console.log` messages for debugging, prefix them clearly with `🧹 CacheCleaner:` so they are easy to identify in the console.
+   - When adding `console.log` messages for debugging, prefix them clearly with `🧹 CacheFlux:` so they are easy to identify in the console.
 
 ## Workflow
 - The project uses a two-branch workflow (`main` for releases, `beta` for active development).

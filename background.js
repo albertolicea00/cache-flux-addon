@@ -1,5 +1,5 @@
 // ============================================================================
-// CacheCleaner - Background Service Worker / Event Page
+// CacheFlux - Background Service Worker / Event Page
 // ============================================================================
 // This script coordinates cleanup of the active tab's site data.
 // It combines:
@@ -198,7 +198,7 @@ function deleteData(exceptions, isForce, options) {
 
   // Print a summary log on the page console for immediate inspection if the tab is not reloaded
   const details = Object.entries(report).map(([key, val]) => `${key}: ${val}`).join(', ');
-  console.log(`[CacheCleaner] DOM storage cleared: ${details || 'no storage types selected'}`);
+  console.log(`[CacheFlux] DOM storage cleared: ${details || 'no storage types selected'}`);
 
   return report;
 }
@@ -209,7 +209,7 @@ function deleteData(exceptions, isForce, options) {
 // if the system/browser is in Dark Mode or Light Mode using window.matchMedia.
 // ----------------------------------------------------------------------------
 function renderToast(isForce, willReload, storageReport) {
-  const existing = document.getElementById('cache-cleaner-toast');
+  const existing = document.getElementById('cache-flux-toast');
   if (existing) existing.remove();
 
   // Detect system theme settings
@@ -226,7 +226,7 @@ function renderToast(isForce, willReload, storageReport) {
 
   // Create toast container
   const toast = document.createElement('div');
-  toast.id = 'cache-cleaner-toast';
+  toast.id = 'cache-flux-toast';
   
   // Styling
   toast.style.position = 'fixed';
@@ -249,10 +249,10 @@ function renderToast(isForce, willReload, storageReport) {
   toast.style.opacity = '0';
 
   // Inject spinner styles if not already present in document
-  let styleTag = document.getElementById('cache-cleaner-toast-style');
+  let styleTag = document.getElementById('cache-flux-toast-style');
   if (!styleTag) {
     styleTag = document.createElement('style');
-    styleTag.id = 'cache-cleaner-toast-style';
+    styleTag.id = 'cache-flux-toast-style';
     styleTag.textContent = `
       @keyframes cc-spin {
         0% { transform: rotate(0deg); }
@@ -502,7 +502,7 @@ function deleteCookiesAndGetCount(tab, baseDomain, isForce, exceptions) {
       return new Promise((resolveGet) => {
         chrome.cookies.getAll(options, (cookies) => {
           if (chrome.runtime.lastError) {
-            console.warn(`[CacheCleaner] Failed to get cookies: ${chrome.runtime.lastError.message}`);
+            console.warn(`[CacheFlux] Failed to get cookies: ${chrome.runtime.lastError.message}`);
             resolveGet([]);
           } else {
             resolveGet(cookies || []);
@@ -581,7 +581,7 @@ async function animateExtensionIcon(tabId) {
       canvas.width = 32;
       canvas.height = 32;
     }
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
     const totalSteps = 15; // 15 steps * 100ms = 1.5 seconds
     let step = 0;
@@ -633,7 +633,7 @@ async function animateExtensionIcon(tabId) {
       }
     }, 100);
   } catch (error) {
-    console.warn(`[CacheCleaner] Failed to run toolbar sweeping animation: ${error.message}`);
+    console.warn(`[CacheFlux] Failed to run toolbar sweeping animation: ${error.message}`);
   }
 }
 
@@ -665,7 +665,7 @@ async function performClean(tab, isForce) {
       
       // Print page-context reports in worker console
       Object.entries(report).forEach(([key, val]) => {
-        console.log(`🧹 CacheCleaner: Processed ${key} (${val})`);
+        console.log(`🧹 CacheFlux: Processed ${key} (${val})`);
       });
 
       // Parse reports for the toast display
@@ -688,7 +688,7 @@ async function performClean(tab, isForce) {
         }
       }
     } else {
-      console.log(`🧹 CacheCleaner: DOM storage cleared for ${hostname} (no report received)`);
+      console.log(`🧹 CacheFlux: DOM storage cleared for ${hostname} (no report received)`);
     }
 
     // Inner helper to display the page toast and trigger reload

@@ -1,13 +1,13 @@
-# Contributing to CacheCleaner 🧹
+# Contributing to CacheFlux 🧹
 
-Thank you for your interest in contributing to CacheCleaner! This guide will help you get started.
+Thank you for your interest in contributing to CacheFlux! This guide will help you get started.
 
 ## Getting Started
 
 1. **Fork** the repository on GitHub
 2. **Clone** your fork locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/CacheCleaner.git
+   git clone https://github.com/YOUR_USERNAME/CacheFlux.git
    ```
 3. **Load** the extension in Chrome:
    - Go to `chrome://extensions/`
@@ -52,7 +52,7 @@ We use a two-branch workflow:
 - Use **vanilla JavaScript** (no frameworks or build tools needed)
 - Use `const` and `let` instead of `var`
 - Add error handling with `try/catch` blocks
-- Include `console.log` messages prefixed with `🧹 CacheCleaner:` for debugging
+- Include `console.log` messages prefixed with `🧹 CacheFlux:` for debugging
 
 ## Reporting Issues
 
@@ -73,4 +73,4 @@ We welcome ideas! Please open an issue with the `enhancement` label and describe
 
 ---
 
-Thank you for helping make CacheCleaner better! 🙌
+Thank you for helping make CacheFlux better! 🙌

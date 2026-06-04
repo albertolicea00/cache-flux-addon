@@ -22,6 +22,8 @@ publish:
 	git tag v$(VERSION)
 	git push origin v$(VERSION)
 	@echo "✅ Publish triggered! GitHub Actions will now build and release to stores."
+	@echo "📝 In a few moments, you can/should edit the Release Notes here:"
+	@echo "👉 https://github.com/albertolicea00/cache-flux-addon/releases/edit/v$(VERSION)"
 
 build:
 	@echo "🧹 CacheFlux: Building version $(VERSION) in $(DIST_DIR)..."

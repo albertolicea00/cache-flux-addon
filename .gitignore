@@ -34,4 +34,7 @@ manifest.json
 .env.local
 .env.*.local
 
-*.mp4
+# dist RRSS assets
+/rrss/*
+/assets/*
+/screenshots/*

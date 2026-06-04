@@ -29,9 +29,9 @@ build:
 	@echo "🧹 CacheFlux: Building version $(VERSION) in $(DIST_DIR)..."
 	@mkdir -p $(DIST_DIR)
 	@$(MAKE) chrome
-	zip -r $(DIST_DIR)/cache-flux-manifest-v3.zip $(FILES)
+	zip -r $(DIST_DIR)/cache-flux-manifest-v3.zip $(FILES) -x "*.DS_Store"
 	@$(MAKE) firefox
-	zip -r $(DIST_DIR)/cache-flux-manifest-v2.zip $(FILES)
+	zip -r $(DIST_DIR)/cache-flux-manifest-v2.zip $(FILES) -x "*.DS_Store"
 	@echo "✅ Build complete! Packages generated in $(DIST_DIR)/"
 
 clean:

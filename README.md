@@ -6,6 +6,8 @@
     <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Chrome_Web_Store-Available-4285F4?style=flat-square&logo=google-chrome&logoColor=white" alt="Chrome Web Store" /></a>
     <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Firefox_Add--ons-Available-FF7139?style=flat-square&logo=firefox-browser&logoColor=white" alt="Firefox Add-ons" /></a>
     <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Edge_Add--ons-Available-0078D7?style=flat-square&logo=microsoft-edge&logoColor=white" alt="Edge Add-ons" /></a>
+    <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Opera_Add--ons-Available-FF1B2D?style=flat-square&logo=opera&logoColor=white" alt="Opera Add-ons" /></a>
+
   </p>
   <p>
     <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript" />
@@ -47,18 +49,12 @@ Installing from the official stores is the easiest way to get **CacheFlux** and 
 
 > ⚠️ **Coming soon — currently under review**
 
-<!-- TODO -->
-<!-- 1. **Google Chrome & Chromium-based browsers (Brave, Vivaldi, Opera)**
-   - 👉 [Download on Chrome Web Store](https://chromewebstore.google.com/)
-   - Click **"Add to Chrome"** and confirm.
-
-2. **Microsoft Edge**
-   - 👉 [Download on Edge Add-ons](https://microsoftedge.microsoft.com/addons)
-   - Click **"Get"** and confirm.
-
-3. **Mozilla Firefox**
-   - 👉 [Download on Firefox Add-ons](https://addons.mozilla.org/)
-   - Click **"Add to Firefox"** and confirm. -->
+<!-- 
+- 🟢 **Chrome** (Brave, Vivaldi): [Download from Chrome Web Store](https://chromewebstore.google.com/detail/xxxx)
+- 🔵 **Edge**: [Download from Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/xxxx)
+- 🔴 **Opera**: [Download from Opera Add-ons](https://addons.opera.com/extensions/details/xxxx)
+- 🦊 **Firefox**: [Download from Firefox Add-ons](https://addons.mozilla.org/addon/xxxx)
+-->
 
 ### 🛠️ Manual Installation (Developer Mode)
 

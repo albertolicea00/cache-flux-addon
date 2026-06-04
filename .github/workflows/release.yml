@@ -36,12 +36,14 @@ jobs:
         with:
           name: cache-flux-manifest-v3
           path: cache-flux-manifest-v3.zip
+          retention-days: 1
 
       - name: Upload Firefox MV2 Artifact (Workflow Run)
         uses: actions/upload-artifact@v4
         with:
           name: cache-flux-manifest-v2
           path: cache-flux-manifest-v2.zip
+          retention-days: 1
 
   publish:
     needs: build

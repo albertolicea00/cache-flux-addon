@@ -217,8 +217,8 @@ function renderToast(isForce, willReload, storageReport) {
   
   // Theme color variables
   const bgColor = isDark 
-  ? 'rgba(31, 41, 55, .9)'
-  : 'rgba(255, 255, 255, .9)';
+  ? 'rgba(31, 41, 55, .93)'
+  : 'rgba(255, 255, 255, .93)';
   const textColor = isDark ? '#f3f4f6' : '#1f2937';
   const borderColor = isDark ? '#374151' : '#e5e7eb';
   const descColor = isDark ? '#9ca3af' : '#4b5563';
@@ -453,7 +453,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 // Listen for the main extension action button clicks
-chrome.browserAction.onClicked.addListener(async (tab) => {
+actionAPI.onClicked.addListener(async (tab) => {
   if (!tab.url || tab.url.startsWith("chrome://")) return;
   performClean(tab, false); 
 });
@@ -603,7 +603,7 @@ async function animateExtensionIcon(tabId) {
 
       const imageData = ctx.getImageData(0, 0, 32, 32);
       
-      chrome.browserAction.setIcon({
+      actionAPI.setIcon({
         tabId: tabId,
         imageData: { "32": imageData }
       }, () => {
@@ -617,7 +617,7 @@ async function animateExtensionIcon(tabId) {
       if (step >= totalSteps) {
         clearInterval(intervalId);
         // Reset to default icons
-        chrome.browserAction.setIcon({
+        actionAPI.setIcon({
           tabId: tabId,
           path: {
             "16": "icons/icon16.png",

@@ -444,17 +444,46 @@ function renderToast(isForce, willReload, storageReport) {
   }, 1500);
 }
 
+// ----------------------------------------------------------------------------
+// Check if a URL is a restricted browser page or extension gallery
+// ----------------------------------------------------------------------------
+const RESTRICTED_PREFIXES = [
+  "chrome://",
+  "chrome-extension://",
+  "opera://",
+  "edge://",
+  "about:",
+  "moz-extension://",
+  "view-source:",
+  "https://addons.opera.com",
+  "https://chrome.google.com/webstore",
+  "https://chromewebstore.google.com",
+  "https://microsoftedge.microsoft.com/addons",
+  "https://addons.mozilla.org"
+];
+
+function isBlockedUrl(url) {
+  if (!url) return true;
+  return RESTRICTED_PREFIXES.some(prefix => url.startsWith(prefix));
+}
+
 // Listen for context menu clicks ("Force Clean")
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "forceClean") {
-    if (!tab.url || tab.url.startsWith("chrome://")) return;
+    if (isBlockedUrl(tab.url)) {
+      console.warn("🧹 CacheFlux: Cannot run on extension gallery or internal browser pages.");
+      return;
+    }
     performClean(tab, true); 
   }
 });
 
 // Listen for the main extension action button clicks
 actionAPI.onClicked.addListener(async (tab) => {
-  if (!tab.url || tab.url.startsWith("chrome://")) return;
+  if (isBlockedUrl(tab.url)) {
+    console.warn("🧹 CacheFlux: Cannot run on extension gallery or internal browser pages.");
+    return;
+  }
   performClean(tab, false); 
 });
 

@@ -13,8 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let exceptions = [];
 
-  // Load options from storage (default: all clean settings true, reload false)
-  chrome.storage.sync.get({
+  const defaults = {
     cleanCookies: true,
     cleanLocalStorage: true,
     cleanSessionStorage: true,
@@ -22,27 +21,59 @@ document.addEventListener('DOMContentLoaded', () => {
     cleanIndexedDB: true,
     reloadPage: false,
     exceptions: []
-  }, (result) => {
-    cleanCookiesCheckbox.checked = result.cleanCookies;
-    cleanLocalStorageCheckbox.checked = result.cleanLocalStorage;
-    cleanSessionStorageCheckbox.checked = result.cleanSessionStorage;
-    cleanCacheStorageCheckbox.checked = result.cleanCacheStorage;
-    cleanIndexedDBCheckbox.checked = result.cleanIndexedDB;
-    reloadPageCheckbox.checked = result.reloadPage;
+  };
 
-    exceptions = result.exceptions;
+  const loadSettings = (result) => {
+    const data = result || defaults;
+    cleanCookiesCheckbox.checked = data.cleanCookies;
+    cleanLocalStorageCheckbox.checked = data.cleanLocalStorage;
+    cleanSessionStorageCheckbox.checked = data.cleanSessionStorage;
+    cleanCacheStorageCheckbox.checked = data.cleanCacheStorage;
+    cleanIndexedDBCheckbox.checked = data.cleanIndexedDB;
+    reloadPageCheckbox.checked = data.reloadPage;
+
+    exceptions = data.exceptions;
     renderList();
-  });
+  };
+
+  // Load options from storage (default: all clean settings true, reload false)
+  try {
+    chrome.storage.sync.get(defaults, (result) => {
+      if (chrome.runtime.lastError || !result) {
+        chrome.storage.local.get(defaults, (localResult) => {
+          loadSettings(localResult);
+        });
+      } else {
+        loadSettings(result);
+      }
+    });
+  } catch (e) {
+    chrome.storage.local.get(defaults, (localResult) => {
+      loadSettings(localResult);
+    });
+  }
 
   function saveSettings() {
-    chrome.storage.sync.set({
+    const data = {
       cleanCookies: cleanCookiesCheckbox.checked,
       cleanLocalStorage: cleanLocalStorageCheckbox.checked,
       cleanSessionStorage: cleanSessionStorageCheckbox.checked,
       cleanCacheStorage: cleanCacheStorageCheckbox.checked,
       cleanIndexedDB: cleanIndexedDBCheckbox.checked,
       reloadPage: reloadPageCheckbox.checked
-    }, () => {
+    };
+    
+    try {
+      chrome.storage.sync.set(data, () => {
+        if (chrome.runtime.lastError) {
+          chrome.storage.local.set(data);
+        }
+      });
+    } catch (e) {
+      chrome.storage.local.set(data);
+    }
+
+    chrome.storage.local.set(data, () => {
       showNotification('Settings updated successfully.');
     });
   }
@@ -60,7 +91,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function saveExceptions() {
-    chrome.storage.sync.set({ exceptions }, () => {
+    try {
+      chrome.storage.sync.set({ exceptions }, () => {
+        if (chrome.runtime.lastError) {
+          chrome.storage.local.set({ exceptions });
+        }
+      });
+    } catch (e) {
+      chrome.storage.local.set({ exceptions });
+    }
+
+    chrome.storage.local.set({ exceptions }, () => {
       showNotification('Exceptions saved successfully.');
     });
   }

@@ -1,5 +1,5 @@
 // ============================================================================
-// CacheCleaner - Background Service Worker (Manifest V3)
+// CacheCleaner - Background Service Worker / Event Page
 // ============================================================================
 // This script coordinates cleanup of the active tab's site data.
 // It combines:
@@ -8,29 +8,72 @@
 // 3. User feedback (displays a beautiful, theme-adaptive toast in the tab).
 // ============================================================================
 
+// ----------------------------------------------------------------------------
+// Manifest V2 / V3 Compatibility Shim
+// ----------------------------------------------------------------------------
+const isMV3 = typeof chrome.action !== 'undefined';
+const actionAPI = isMV3 ? chrome.action : chrome.browserAction;
+
+// Unified script execution helper that normalizes the returned results format
+// so the callback can always read results[0].result like in MV3.
+function executeScriptOnTab(tabId, func, args, callback) {
+  if (isMV3) {
+    chrome.scripting.executeScript({
+      target: { tabId: tabId },
+      func: func,
+      args: args
+    }, (results) => {
+      if (callback) callback(results);
+    });
+  } else {
+    chrome.tabs.executeScript(tabId, {
+      code: `(${func.toString()})(${args.map(arg => JSON.stringify(arg)).join(', ')})`
+    }, (results) => {
+      if (callback) {
+        // Map raw array output of MV2 to match MV3's InjectionResult layout
+        const wrappedResults = results ? results.map(val => ({ result: val })) : [];
+        callback(wrappedResults);
+      }
+    });
+  }
+}
+
 chrome.runtime.onInstalled.addListener(() => {
   // Create context menu item under the extension action icon
   chrome.contextMenus.create({
     id: "forceClean",
     title: "Force Clean (Ignore Exceptions)",
-    contexts: ["action"]
+    contexts: [isMV3 ? "action" : "browser_action"]
   });
 });
 
 // Retrieve user preferences and exceptions from sync storage
 async function getOptions() {
+  const defaults = {
+    cleanCookies: true,
+    cleanLocalStorage: true,
+    cleanSessionStorage: true,
+    cleanCacheStorage: true,
+    cleanIndexedDB: true,
+    reloadPage: false,
+    exceptions: []
+  };
   return new Promise((resolve) => {
-    chrome.storage.sync.get({
-      cleanCookies: true,
-      cleanLocalStorage: true,
-      cleanSessionStorage: true,
-      cleanCacheStorage: true,
-      cleanIndexedDB: true,
-      reloadPage: false,
-      exceptions: []
-    }, (result) => {
-      resolve(result);
-    });
+    try {
+      chrome.storage.sync.get(defaults, (result) => {
+        if (chrome.runtime.lastError || !result) {
+          chrome.storage.local.get(defaults, (localResult) => {
+            resolve(localResult || defaults);
+          });
+        } else {
+          resolve(result);
+        }
+      });
+    } catch (e) {
+      chrome.storage.local.get(defaults, (localResult) => {
+        resolve(localResult || defaults);
+      });
+    }
   });
 }
 
@@ -410,7 +453,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 // Listen for the main extension action button clicks
-chrome.action.onClicked.addListener(async (tab) => {
+chrome.browserAction.onClicked.addListener(async (tab) => {
   if (!tab.url || tab.url.startsWith("chrome://")) return;
   performClean(tab, false); 
 });
@@ -531,7 +574,13 @@ async function animateExtensionIcon(tabId) {
     const blob = await response.blob();
     const imgBitmap = await createImageBitmap(blob);
 
-    const canvas = new OffscreenCanvas(32, 32);
+    const canvas = (typeof OffscreenCanvas !== 'undefined')
+      ? new OffscreenCanvas(32, 32)
+      : document.createElement('canvas');
+    if (canvas.width === undefined) {
+      canvas.width = 32;
+      canvas.height = 32;
+    }
     const ctx = canvas.getContext('2d');
 
     const totalSteps = 15; // 15 steps * 100ms = 1.5 seconds
@@ -554,7 +603,7 @@ async function animateExtensionIcon(tabId) {
 
       const imageData = ctx.getImageData(0, 0, 32, 32);
       
-      chrome.action.setIcon({
+      chrome.browserAction.setIcon({
         tabId: tabId,
         imageData: { "32": imageData }
       }, () => {
@@ -568,7 +617,7 @@ async function animateExtensionIcon(tabId) {
       if (step >= totalSteps) {
         clearInterval(intervalId);
         // Reset to default icons
-        chrome.action.setIcon({
+        chrome.browserAction.setIcon({
           tabId: tabId,
           path: {
             "16": "icons/icon16.png",
@@ -600,11 +649,7 @@ async function performClean(tab, isForce) {
   animateExtensionIcon(tab.id);
 
   // Inject and execute DOM storage cleanup first
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    func: deleteData,
-    args: [exceptions, isForce, options]
-  }, (results) => {
+  executeScriptOnTab(tab.id, deleteData, [exceptions, isForce, options], (results) => {
     
     // Prepare the final report structure
     const storageReport = {
@@ -659,11 +704,7 @@ async function performClean(tab, isForce) {
       }
 
       // Inject the floating toast HTML in the active tab
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: renderToast,
-        args: [isForce, options.reloadPage, storageReport]
-      });
+      executeScriptOnTab(tab.id, renderToast, [isForce, options.reloadPage, storageReport]);
 
       // If reload is enabled, trigger reload after 3.5 seconds
       // (Coordinated: 1.5 seconds fake progress + 2 seconds success visibility)

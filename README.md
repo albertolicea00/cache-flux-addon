@@ -71,7 +71,22 @@ If you want to test the latest features or contribute to the project, you can in
 git clone https://github.com/albertolicea00/CacheCleaner.git
 ```
 
-#### 2. Load the Extension in Your Browser:
+#### 2. 🔀 Set the Target Manifest (Chrome/MV3 or Firefox/MV2):
+
+Before loading the extension, switch to the appropriate manifest version for your target browser:
+
+- **For Google Chrome / Chromium (Manifest V3)**:
+  ```bash
+  make chrome
+  ```
+- **For Mozilla Firefox (Manifest V2)**:
+  ```bash
+  make firefox
+  ```
+
+This copies the correct manifest template to the ignored `manifest.json` file.
+
+#### 3. Load the Extension in Your Browser:
 
 ##### For Google Chrome & Chromium-based browsers (Edge, Brave, Opera):
 1. 🌐 Open your browser and go to `chrome://extensions/` (or `edge://extensions/`).

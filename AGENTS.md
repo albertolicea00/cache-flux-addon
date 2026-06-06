@@ -30,7 +30,7 @@ Browser extension (Chrome MV3 + Firefox MV2) for one-click site data cleanup.
 ## Conventions
 
 - Debug logs: prefix with `🧹 CacheFlux:`
-- Branch workflow: `main` (releases), `beta` (active development)
+- Branch workflow: `main` (stable) + feature branches via Pull Requests
 - Version in `manifest.v3.json` is canonical for make/git-versioning
 
 ## Release pipeline (CI)

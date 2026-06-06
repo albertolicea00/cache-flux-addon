@@ -1,5 +1,3 @@
-> **⚠️ IMPORTANT:** All Pull Requests must be directed to the `beta` branch. PRs directed to `main` will not be accepted.
-
 ## Description
 Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context.
 

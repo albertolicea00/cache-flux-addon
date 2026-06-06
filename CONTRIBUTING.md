@@ -16,16 +16,12 @@ Thank you for your interest in contributing to CacheFlux! This guide will help y
 
 ## Development Workflow
 
-We use a two-branch workflow:
-- `main`: Stable release version.
-- `beta`: Active development branch.
+We work directly off `main` using feature branches and Pull Requests.
 
-**All Pull Requests must be directed to the `beta` branch.**
-
-1. Create a new branch from `beta` for your feature or fix:
+1. Create a new branch from `main` for your feature or fix:
 
    ```bash
-   git checkout -b feature/your-feature-name beta
+   git checkout -b feature/your-feature-name main
    ```
 
 2. Make your changes — the extension uses **Manifest V3** with:

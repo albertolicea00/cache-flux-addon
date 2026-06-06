@@ -47,14 +47,15 @@ As developers, we constantly deal with stale cached data during development. Man
 
 Installing from the official stores is the easiest way to get **CacheFlux** and ensure it stays updated automatically.
 
-> ⚠️ **Coming soon — currently under review**
+> ⚠️ **Chrome, Edge, Opera versions on the way — review in progress**
 
 <!-- 
-- 🟢 **Chrome** (Brave, Vivaldi): [Download from Chrome Web Store](https://chromewebstore.google.com/detail/xxxx)
-- 🔵 **Edge**: [Download from Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/xxxx)
-- 🔴 **Opera**: [Download from Opera Add-ons](https://addons.opera.com/extensions/details/xxxx)
-- 🦊 **Firefox**: [Download from Firefox Add-ons](https://addons.mozilla.org/addon/xxxx)
+- 🟢 **Chrome** (Brave, Vivaldi): [Download from Chrome Web Store](https://chromewebstore.google.com/detail/cacheflux)
+- 🔵 **Edge**: [Download from Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/cacheflux)
+- 🔴 **Opera**: [Download from Opera Add-ons](https://addons.opera.com/extensions/details/cacheflux)
 -->
+
+- 🦊 **Firefox**: [Download from Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/cacheflux/)
 
 ### 🛠️ Manual Installation (Developer Mode)
 

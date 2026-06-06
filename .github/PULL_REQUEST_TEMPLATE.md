@@ -1,3 +1,5 @@
+> **ℹ️ NOTE:** All Pull Requests must target the `main` branch. Please create your feature branch from `main` before opening a PR.
+
 ## Description
 Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context.
 

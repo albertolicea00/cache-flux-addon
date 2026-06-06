@@ -38,3 +38,8 @@ manifest.json
 /rrss/*
 /assets/*
 /screenshots/*
+
+# ai stuff
+.agents/
+.claude/
+.continue/

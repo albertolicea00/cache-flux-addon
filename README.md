@@ -3,8 +3,8 @@
   <p><strong>One-click browser data cleaner for developers.</strong><br/>
   Sweep away cookies, localStorage, sessionStorage, IndexedDB, and CacheStorage — instantly.</p>
   <p>
-    <a href="https://chromewebstore.google.com/detail/cacheflux/bkikllmlommfiahmomgkendfbbhcjlad"><img src="https://img.shields.io/badge/Chrome_Web_Store-Available-4285F4?style=flat-square&logo=google-chrome&logoColor=white" alt="Chrome Web Store" /></a>
-    <a href="https://addons.mozilla.org/en-US/firefox/addon/cacheflux/"><img src="https://img.shields.io/badge/Firefox_Add--ons-Available-FF7139?style=flat-square&logo=firefox-browser&logoColor=white" alt="Firefox Add-ons" /></a>
+    <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Chrome_Web_Store-Available-4285F4?style=flat-square&logo=google-chrome&logoColor=white" alt="Chrome Web Store" /></a>
+    <a href=#-from-extension-stores-recommended><img src="https://img.shields.io/badge/Firefox_Add--ons-Available-FF7139?style=flat-square&logo=firefox-browser&logoColor=white" alt="Firefox Add-ons" /></a>
     <!-- <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Edge_Add--ons-Available-0078D7?style=flat-square&logo=microsoft-edge&logoColor=white" alt="Edge Add-ons" /></a> -->
     <!-- <a href="#-from-extension-stores-recommended"><img src="https://img.shields.io/badge/Opera_Add--ons-Available-FF1B2D?style=flat-square&logo=opera&logoColor=white" alt="Opera Add-ons" /></a> -->
   </p>
